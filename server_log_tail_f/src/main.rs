@@ -175,9 +175,9 @@ fn stream_file(stream:&mut &TcpStream,update_count: &Arc<(Mutex<i32>,Condvar)>) 
         }
         counter +=1;
         let file = File::open(path)?;
-        let to_write = read_n_lines(&file,10)?; 
+        let to_write = read_n_lines(&file,*mutex_guard as usize)?; 
         *mutex_guard=0;
-        let message = format!("data: Update{}: {}",counter,&to_write);
+        let message = format!("\n{}",&to_write);
 
         stream.write_all(message.as_bytes())?;
         stream.flush()?;
@@ -196,27 +196,29 @@ fn read_n_lines(file:&File,lines:usize) -> std::io::Result<String>{
 
 
 
-    while output.len() < lines && position > 0{
+    while output.len() < lines+1 && position > 0{
         position = position.saturating_sub(1);
 
         reader.seek(io::SeekFrom::Start(position))?;
         let mut line = String::new();
 
+        let mut char_buffer= [0;1];
+        reader.read(&mut char_buffer)?;
+        
+        let char_curr = String::from_utf8_lossy(&char_buffer);
+        
 
-        reader.read_line(&mut line)?;
-
-        if position > 0 && line.trim().is_empty() {
+        if position > 0 && char_curr == "\n" {
             position = position.saturating_add(1);
-
             reader.seek(SeekFrom::Start(position))?;
             reader.read_line(&mut line)?;
             output.push_front(line.trim().to_string());
-
             position = position.saturating_sub(2);
             continue;
         }
     }
-    let str_out = output.into_iter().map(|n| n+"\n").collect();
+    let str_out:String = output.into_iter().map(|n| n+"\n").collect();
+    let str_out = str_out.trim().to_string();
     println!("output {}",str_out);
     Ok(str_out) 
 }

@@ -11,3 +11,27 @@ asljf;let
 hello
 test
 tes
+appending 
+this will be appended to txt file in same dir 
+updating
+real time updating 
+hello
+hello
+hmmmmm
+helo
+hello
+new
+updating in real time
+hello
+nooooooooooooooooooooooooooooooo
+hello
+hmm
+so 2 times lol
+update
+latest
+nice
+hello
+hello
+updating 
+weeeee
+nice 
