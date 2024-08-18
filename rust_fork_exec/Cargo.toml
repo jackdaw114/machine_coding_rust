@@ -1,0 +1,9 @@
+[package]
+name = "rust_fork_exec"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dotenv = "0.15.0"
+
+
