@@ -1,7 +1,0 @@
-[workspace]
-resolver="2"
-members=[
-    "server_log_tail_f",
-    "sql_tests",
-    "talk_client",
-]

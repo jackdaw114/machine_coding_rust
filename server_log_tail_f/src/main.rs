@@ -145,7 +145,6 @@ fn write_file(stream:&mut &TcpStream,update_count: &Arc<(Mutex<i32>,Condvar)>) -
 }
 
 fn stream_file(stream:&mut &TcpStream,update_count: &Arc<(Mutex<i32>,Condvar)>) -> std::io::Result<()>{
-    let  mut counter = 0;
     let response_headers = 
         "HTTP/1.1 200 OK\r\n\
         Content-Type: text/event-stream\r\n\
@@ -158,13 +157,11 @@ fn stream_file(stream:&mut &TcpStream,update_count: &Arc<(Mutex<i32>,Condvar)>) 
     stream.write_all(response_headers.as_bytes())?;
     stream.flush();
     let path = Path::new("./test.txt");
-    {
     let file = File::open(path)?;
 
     let to_write = read_n_lines(&file,10)?; 
     stream.write_all(to_write.as_bytes())?;
     stream.flush()?;
-} 
 
     loop{
         let (lock,cvar) = &**update_count;
@@ -173,9 +170,7 @@ fn stream_file(stream:&mut &TcpStream,update_count: &Arc<(Mutex<i32>,Condvar)>) 
         while *mutex_guard ==0{
             mutex_guard = cvar.wait_timeout(mutex_guard, Duration::from_secs(1)).unwrap().0;
         }
-        counter +=1;
-        let file = File::open(path)?;
-        let to_write = read_n_lines(&file,*mutex_guard as usize)?; 
+        let to_write = read_n_lines(&file,1)?; 
         *mutex_guard=0;
         let message = format!("\n{}",&to_write);
 

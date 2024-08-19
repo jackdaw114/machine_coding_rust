@@ -35,3 +35,26 @@ hello
 updating 
 weeeee
 nice 
+hello
+this
+is 
+crazy
+why
+am 
+i 
+printing 
+2
+times
+hello
+appending
+to 
+file
+update 
+real 
+time
+cool?
+edge case\n test
+hmmm
+welp
+edge case should fail
+edge case \n test
